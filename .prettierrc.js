@@ -8,5 +8,4 @@ module.exports = {
   'object-curly-spacing': true,
   'array-bracket-spacing': [true, 'never'],
   trailingComma: 'es5',
-  parser: 'typescript',
 };
