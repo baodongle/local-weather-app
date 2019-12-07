@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { ICurrentWeather } from '../interfaces';
@@ -30,10 +30,19 @@ export interface IWeatherService {
   providedIn: 'root',
 })
 export class WeatherService implements IWeatherService {
+  currentWeather = new BehaviorSubject<ICurrentWeather>({
+    city: '--',
+    country: '--',
+    date: Date.now(),
+    image: '',
+    temperature: 0,
+    description: '',
+  });
+
   constructor(private httpClient: HttpClient) {}
 
   getCurrentWeather(search: string | number, country?: string): Observable<ICurrentWeather> {
-    let uriParams = '';
+    let uriParams: string;
     uriParams = typeof search === 'string' ? `q=${search}` : `zip=${search}`;
 
     if (country) {
@@ -43,7 +52,7 @@ export class WeatherService implements IWeatherService {
     return this.getCurrentWeatherHelper(uriParams);
   }
 
-  getCurrentWeatherByCoords(coords: Coordinates):Observable<ICurrentWeather> {
+  getCurrentWeatherByCoords(coords: Coordinates): Observable<ICurrentWeather> {
     const uriParams = `lat=${coords.latitude}&lon=${coords.longitude}`;
     return this.getCurrentWeatherHelper(uriParams);
   }
